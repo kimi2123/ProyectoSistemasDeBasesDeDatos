@@ -89,7 +89,7 @@ public class Veterinaria {
         
         CConexion objetoConexion = new CConexion();
         
-        String consulta = "Insert into veterinarias(nombre,direccion,telefono,correo_electronico,cant_pedidos_mes) values (?,?,?,?,?);";
+        String consulta = "Insert into veterinaria(nombre,direccion,telefono,correo_electronico,cant_pedidos_mes) values (?,?,?,?,?);";
         
         try{
             

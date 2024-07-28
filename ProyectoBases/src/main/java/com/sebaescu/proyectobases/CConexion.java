@@ -14,7 +14,7 @@ public class CConexion {
     Connection conectar = null;
     
     String usuario = "root";
-    String contrasena = "root";
+    String contrasena = "Kimikony123@";
     String bd = "gestion_ventas";
     String ip = "localhost";
     String puerto = "3306";
