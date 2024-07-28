@@ -4,60 +4,71 @@
  */
 package com.sebaescu.proyectobases;
 
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+
 /**
  *
  * @author erick
  */
 public class Veterinaria {
-    private Long id;
-    private String nombre;
-    private String direccion;
-    private String telefono;
-    private String correoElectronico;
+    private int id;
+    private String nombreVeterinaria;
+    private String direccionVeterinaria;
+    private String telefonoVeterinaria;
+    private String correoVeterinaria;
     private int cantidadPedidosMes;
 
     public Veterinaria() {
         
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombreVeterinaria() {
+        return nombreVeterinaria;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombreVeterinaria(String nombreVeterinaria) {
+        this.nombreVeterinaria = nombreVeterinaria;
     }
 
-    public String getDireccion() {
-        return direccion;
+    public String getDireccionVeterinaria() {
+        return direccionVeterinaria;
     }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
+    public void setDireccionVeterinaria(String direccionVeterinaria) {
+        this.direccionVeterinaria = direccionVeterinaria;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getTelefonoVeterinaria() {
+        return telefonoVeterinaria;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setTelefonoVeterinaria(String telefonoVeterinaria) {
+        this.telefonoVeterinaria = telefonoVeterinaria;
     }
 
-    public String getCorreoElectronico() {
-        return correoElectronico;
+    public String getCorreoVeterinaria() {
+        return correoVeterinaria;
     }
 
-    public void setCorreoElectronico(String correoElectronico) {
-        this.correoElectronico = correoElectronico;
+    public void setCorreoVeterinaria(String correoVeterinaria) {
+        this.correoVeterinaria = correoVeterinaria;
     }
 
     public int getCantidadPedidosMes() {
@@ -68,5 +79,154 @@ public class Veterinaria {
         this.cantidadPedidosMes = cantidadPedidosMes;
     }
     
+    public void insertarVeterinaria(JTextField paramNombre,JTextField paramDireccion,JTextField paramTelefono, JTextField paramCorreo, JTextField paramPedidosMes){
+        
+        setNombreVeterinaria(paramNombre.getText());
+        setDireccionVeterinaria(paramDireccion.getText());
+        setTelefonoVeterinaria(paramTelefono.getText());
+        setCorreoVeterinaria(paramCorreo.getText());
+        setCantidadPedidosMes(Integer.parseInt(paramPedidosMes.getText()));
+        
+        CConexion objetoConexion = new CConexion();
+        
+        String consulta = "Insert into veterinarias(nombre,direccion,telefono,correo_electronico,cant_pedidos_mes) values (?,?,?,?,?);";
+        
+        try{
+            
+            CallableStatement cs = objetoConexion.estableceConexion().prepareCall(consulta);
+            
+            cs.setString(1, getNombreVeterinaria());
+            cs.setString(2, getDireccionVeterinaria());
+            cs.setString(3, getTelefonoVeterinaria());
+            cs.setString(4, getCorreoVeterinaria());
+            cs.setInt(5, getCantidadPedidosMes());
+            
+            cs.execute();
+            
+            JOptionPane.showMessageDialog(null, "Se añadio correctamente la veterinaria");
+            
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "No se añadió correctamente la veterinaria, error: " + e.toString());
+        }
+    }
     
+    public void mostrarVeterinarias(JTable paramTablaTotalVeterinarias){
+        
+        CConexion objetoConexion = new CConexion();
+        
+        DefaultTableModel modelo = new DefaultTableModel();
+        
+        TableRowSorter<TableModel> ordernarTabla = new TableRowSorter<TableModel> (modelo);
+        paramTablaTotalVeterinarias.setRowSorter(ordernarTabla);
+        
+        String sql = "";
+        
+        modelo.addColumn("idVeterinaria");
+        modelo.addColumn("nombre");
+        modelo.addColumn("direccion");
+        modelo.addColumn("telefono");
+        modelo.addColumn("correo_electronico");
+        modelo.addColumn("cant_pedidos_mes");
+        
+        paramTablaTotalVeterinarias.setModel(modelo);
+        
+        sql = "select * from veterinaria;";
+        
+        String[] datos =  new String[6];
+        
+        Statement st;
+        
+        try{
+            st = objetoConexion.estableceConexion().createStatement();
+            
+            ResultSet rs = st.executeQuery(sql);
+            
+            while(rs.next()){
+                datos[0] = rs.getString(1);
+                datos[1] = rs.getString(2);
+                datos[2] = rs.getString(3);
+                datos[3] = rs.getString(4);
+                datos[4] = rs.getString(5);
+                datos[5] = rs.getString(6);
+                
+                modelo.addRow(datos);
+            }
+            
+            paramTablaTotalVeterinarias.setModel(modelo);
+            
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "No se pudo mostrar los registros, error: " + e.toString());
+        }
+        
+    }
+    
+    public void seleccionarVeterinaria(JTable paramTablaVeterinarias, JTextField paramId, JTextField paramNombre, JTextField paramDireccion,JTextField paramTelefono, JTextField paramCorreo, JTextField paramPedidosMes){
+        
+        try{
+            int fila = paramTablaVeterinarias.getSelectedRow();
+            
+            if(fila >= 0){
+                paramId.setText(paramTablaVeterinarias.getValueAt(fila, 0).toString());
+                paramNombre.setText(paramTablaVeterinarias.getValueAt(fila, 1).toString());
+                paramDireccion.setText(paramTablaVeterinarias.getValueAt(fila, 2).toString());
+                paramTelefono.setText(paramTablaVeterinarias.getValueAt(fila, 3).toString());
+                paramCorreo.setText(paramTablaVeterinarias.getValueAt(fila, 4).toString());
+                paramPedidosMes.setText(paramTablaVeterinarias.getValueAt(fila, 5).toString());
+                
+            }else{
+               JOptionPane.showMessageDialog(null, "Fila no seleccionaada " ); 
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error de Seleccion, error: " + e.toString());
+        }
+    }
+    public void modificarVeterinaria(JTextField paramId, JTextField paramNombre, JTextField paramDireccion,JTextField paramTelefono, JTextField paramCorreo, JTextField paramPedidosMes){
+        
+        setId(Integer.parseInt(paramId.getText()));
+        setNombreVeterinaria(paramNombre.getText());
+        setDireccionVeterinaria(paramDireccion.getText());
+        setTelefonoVeterinaria(paramTelefono.getText());
+        setCorreoVeterinaria(paramCorreo.getText());
+        setCantidadPedidosMes(Integer.parseInt(paramPedidosMes.getText()));
+        
+        CConexion objetoConexion = new CConexion();
+        
+        String consulta = "UPDATE veterinaria SET veterinaria.nombre = ?, veterinaria.direccion = ?, veterinaria.telefono = ?, veterinaria.correo_electronico =?, veterinaria.cant_pedidos_mes =? WHERE veterinaria.idVeterinaria = ?;";
+        try{
+            CallableStatement cs = objetoConexion.estableceConexion().prepareCall(consulta);
+            
+            cs.setString(1, getNombreVeterinaria());
+            cs.setString(2, getDireccionVeterinaria());
+            cs.setString(3, getTelefonoVeterinaria());
+            cs.setString(4, getCorreoVeterinaria());
+            cs.setInt(5, getCantidadPedidosMes());
+            cs.setInt(6, getId());
+            
+            cs.execute();
+            
+            JOptionPane.showMessageDialog(null, "Modificacion exitosa " ); 
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "No se pudo modificar, error: " + e.toString());
+        }
+    }
+    public void eliminarVeterinaria(JTextField paramId){
+        
+        setId(Integer.parseInt(paramId.getText()));
+        
+        CConexion objetoConexion = new CConexion();
+        
+        String consulta = "DELETE FROM veterinaria WHERE veterinaria.idVeterinaria = ?;";
+        
+        try{
+            CallableStatement cs = objetoConexion.estableceConexion().prepareCall(consulta);
+            
+            cs.setInt(1, getId());
+            
+            cs.execute();
+            
+            JOptionPane.showMessageDialog(null, "Se elimino correctamente la Veterinaria " ); 
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "No se pudo eliminar, error: " + e.toString());
+        }
+    }
 }
