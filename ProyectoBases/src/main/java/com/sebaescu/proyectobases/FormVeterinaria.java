@@ -23,6 +23,9 @@ public class FormVeterinaria extends javax.swing.JFrame {
      
      Veterinaria objetoVeterinaria = new Veterinaria();
      objetoVeterinaria.mostrarVeterinarias(TbTotalVeterinarias);
+     
+     CConexion objectConexion = new CConexion();
+     objectConexion.estableceConexion();
     }
 
     /**

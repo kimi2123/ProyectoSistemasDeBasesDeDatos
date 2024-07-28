@@ -17,7 +17,7 @@ public class CConexion {
     String contrasena = "root";
     String bd = "gestion_ventas";
     String ip = "localhost";
-    String puerto = "3307";
+    String puerto = "3306";
     
     String cadena = "jdbc:mysql://"+ip+":"+puerto+"/"+bd;
     
