@@ -25,7 +25,7 @@ public class Veterinaria {
     private String direccionVeterinaria;
     private String telefonoVeterinaria;
     private String correoVeterinaria;
-    private int cantidadPedidosMes;
+
 
     public Veterinaria() {
         
@@ -71,25 +71,17 @@ public class Veterinaria {
         this.correoVeterinaria = correoVeterinaria;
     }
 
-    public int getCantidadPedidosMes() {
-        return cantidadPedidosMes;
-    }
-
-    public void setCantidadPedidosMes(int cantidadPedidosMes) {
-        this.cantidadPedidosMes = cantidadPedidosMes;
-    }
-    
     public void insertarVeterinaria(JTextField paramNombre,JTextField paramDireccion,JTextField paramTelefono, JTextField paramCorreo, JTextField paramPedidosMes){
         
         setNombreVeterinaria(paramNombre.getText());
         setDireccionVeterinaria(paramDireccion.getText());
         setTelefonoVeterinaria(paramTelefono.getText());
         setCorreoVeterinaria(paramCorreo.getText());
-        setCantidadPedidosMes(Integer.parseInt(paramPedidosMes.getText()));
+
         
         CConexion objetoConexion = new CConexion();
         
-        String consulta = "Insert into veterinaria(nombre,direccion,telefono,correo_electronico,cant_pedidos_mes) values (?,?,?,?,?);";
+        String consulta = "Insert into veterinaria(nombre,direccion,telefono,correo_electronico) values (?,?,?,?);";
         
         try{
             
@@ -98,8 +90,7 @@ public class Veterinaria {
             cs.setString(1, getNombreVeterinaria());
             cs.setString(2, getDireccionVeterinaria());
             cs.setString(3, getTelefonoVeterinaria());
-            cs.setString(4, getCorreoVeterinaria());
-            cs.setInt(5, getCantidadPedidosMes());
+            cs.setString(4, getCorreoVeterinaria()); 
             
             cs.execute();
             
@@ -126,7 +117,7 @@ public class Veterinaria {
         modelo.addColumn("direccion");
         modelo.addColumn("telefono");
         modelo.addColumn("correo_electronico");
-        modelo.addColumn("cant_pedidos_mes");
+
         
         paramTablaTotalVeterinarias.setModel(modelo);
         
@@ -147,7 +138,7 @@ public class Veterinaria {
                 datos[2] = rs.getString(3);
                 datos[3] = rs.getString(4);
                 datos[4] = rs.getString(5);
-                datos[5] = rs.getString(6);
+
                 
                 modelo.addRow(datos);
             }
@@ -171,7 +162,7 @@ public class Veterinaria {
                 paramDireccion.setText(paramTablaVeterinarias.getValueAt(fila, 2).toString());
                 paramTelefono.setText(paramTablaVeterinarias.getValueAt(fila, 3).toString());
                 paramCorreo.setText(paramTablaVeterinarias.getValueAt(fila, 4).toString());
-                paramPedidosMes.setText(paramTablaVeterinarias.getValueAt(fila, 5).toString());
+
                 
             }else{
                JOptionPane.showMessageDialog(null, "Fila no seleccionaada " ); 
@@ -187,11 +178,11 @@ public class Veterinaria {
         setDireccionVeterinaria(paramDireccion.getText());
         setTelefonoVeterinaria(paramTelefono.getText());
         setCorreoVeterinaria(paramCorreo.getText());
-        setCantidadPedidosMes(Integer.parseInt(paramPedidosMes.getText()));
+
         
         CConexion objetoConexion = new CConexion();
         
-        String consulta = "UPDATE veterinaria SET veterinaria.nombre = ?, veterinaria.direccion = ?, veterinaria.telefono = ?, veterinaria.correo_electronico =?, veterinaria.cant_pedidos_mes =? WHERE veterinaria.idVeterinaria = ?;";
+        String consulta = "UPDATE veterinaria SET veterinaria.nombre = ?, veterinaria.direccion = ?, veterinaria.telefono = ?, veterinaria.correo_electronico =? WHERE veterinaria.idVeterinaria = ?;";
         try{
             CallableStatement cs = objetoConexion.estableceConexion().prepareCall(consulta);
             
@@ -199,7 +190,6 @@ public class Veterinaria {
             cs.setString(2, getDireccionVeterinaria());
             cs.setString(3, getTelefonoVeterinaria());
             cs.setString(4, getCorreoVeterinaria());
-            cs.setInt(5, getCantidadPedidosMes());
             cs.setInt(6, getId());
             
             cs.execute();

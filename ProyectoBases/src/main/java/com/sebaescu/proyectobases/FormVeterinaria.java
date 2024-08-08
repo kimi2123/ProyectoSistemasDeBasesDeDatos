@@ -38,18 +38,18 @@ public class FormVeterinaria extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel3 = new javax.swing.JLabel();
+        txtPedidosMes = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         txtId = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
         txtDireccion = new javax.swing.JTextField();
         txtTelefono = new javax.swing.JTextField();
         txtCorreo = new javax.swing.JTextField();
-        txtPedidosMes = new javax.swing.JTextField();
         BtnEliminar = new javax.swing.JButton();
         BtnModificar = new javax.swing.JButton();
         BtnGuardar = new javax.swing.JButton();
@@ -59,6 +59,8 @@ public class FormVeterinaria extends javax.swing.JFrame {
         TbTotalVeterinarias = new javax.swing.JTable();
 
         jLabel3.setText("Apellido:");
+
+        jLabel6.setText("Pedidos/Mes:");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -71,8 +73,6 @@ public class FormVeterinaria extends javax.swing.JFrame {
         jLabel4.setText("Direccion:");
 
         jLabel5.setText("Telefono:");
-
-        jLabel6.setText("Pedidos/Mes:");
 
         BtnEliminar.setText("Eliminar");
         BtnEliminar.addActionListener(new java.awt.event.ActionListener() {
@@ -106,10 +106,6 @@ public class FormVeterinaria extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(BtnEliminar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(BtnModificar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPedidosMes, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
                     .addComponent(BtnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,11 +151,7 @@ public class FormVeterinaria extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(txtPedidosMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                 .addComponent(BtnGuardar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(BtnModificar)
@@ -228,6 +220,11 @@ public class FormVeterinaria extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void TbTotalVeterinariasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TbTotalVeterinariasMouseClicked
+        Veterinaria objetoVeterinaria = new Veterinaria();
+        objetoVeterinaria.seleccionarVeterinaria(TbTotalVeterinarias, txtId, txtNombre, txtDireccion, txtTelefono, txtCorreo, txtPedidosMes);
+    }//GEN-LAST:event_TbTotalVeterinariasMouseClicked
+
     private void BtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarActionPerformed
         Veterinaria objetoVeterinaria = new Veterinaria();
         objetoVeterinaria.insertarVeterinaria(txtNombre, txtDireccion, txtTelefono, txtCorreo, txtPedidosMes);
@@ -235,7 +232,7 @@ public class FormVeterinaria extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnGuardarActionPerformed
 
     private void BtnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnModificarActionPerformed
-        Veterinaria objetoVeterinaria = new Veterinaria();     
+        Veterinaria objetoVeterinaria = new Veterinaria();
         objetoVeterinaria.modificarVeterinaria(txtId,txtNombre, txtDireccion, txtTelefono, txtCorreo, txtPedidosMes);
         objetoVeterinaria.mostrarVeterinarias(TbTotalVeterinarias);
     }//GEN-LAST:event_BtnModificarActionPerformed
@@ -245,11 +242,6 @@ public class FormVeterinaria extends javax.swing.JFrame {
         objetoVeterinaria.eliminarVeterinaria(txtId);
         objetoVeterinaria.mostrarVeterinarias(TbTotalVeterinarias);
     }//GEN-LAST:event_BtnEliminarActionPerformed
-
-    private void TbTotalVeterinariasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TbTotalVeterinariasMouseClicked
-        Veterinaria objetoVeterinaria = new Veterinaria();
-        objetoVeterinaria.seleccionarVeterinaria(TbTotalVeterinarias, txtId, txtNombre, txtDireccion, txtTelefono, txtCorreo, txtPedidosMes);
-    }//GEN-LAST:event_TbTotalVeterinariasMouseClicked
 
     /**
      * @param args the command line arguments
