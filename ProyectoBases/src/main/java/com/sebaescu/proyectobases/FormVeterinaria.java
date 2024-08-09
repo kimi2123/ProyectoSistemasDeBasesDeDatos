@@ -4,20 +4,49 @@
  */
 package com.sebaescu.proyectobases;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Sebastian
  */
+
 public class FormVeterinaria extends javax.swing.JFrame {
 
     /**
      * Creates new form FormVeterinaria
      */
+    
+    private Connection conectar;
+
+    private String user = "root";
+    private String password = "Kimikony123@";
+
+    String bd = "gestion_ventas";
+    String ip = "localhost";
+    String puerto = "3306";
+    
+    String url = "jdbc:mysql://"+ip+":"+puerto+"/"+bd;
+    
     public FormVeterinaria() {
+        
         initComponents();
         this.setLocationRelativeTo(null);
         txtId.setEnabled(false);
         
+        /*
+        initComponents();
+        this.setLocationRelativeTo(null);
+        txtId.setEnabled(false);
+        conectar = null;
+        Veterinaria objetoVeterinaria = new Veterinaria();
+        objetoVeterinaria.mostrarVeterinarias(TbTotalVeterinarias);
+        estableceConexion();
+        */
      /*   CConexion objetoConexion = new CConexion();
         objetoConexion.estableceConexion(); */
      
@@ -26,6 +55,16 @@ public class FormVeterinaria extends javax.swing.JFrame {
      
      CConexion objectConexion = new CConexion();
      objectConexion.estableceConexion();
+    }
+        private void estableceConexion() {
+        try {
+            if (conectar == null || conectar.isClosed()) {
+                conectar = DriverManager.getConnection(url, user, password);
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al conectar a la base de datos: " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -222,55 +261,156 @@ public class FormVeterinaria extends javax.swing.JFrame {
 
     private void TbTotalVeterinariasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TbTotalVeterinariasMouseClicked
         Veterinaria objetoVeterinaria = new Veterinaria();
-        objetoVeterinaria.seleccionarVeterinaria(TbTotalVeterinarias, txtId, txtNombre, txtDireccion, txtTelefono, txtCorreo, txtPedidosMes);
+        objetoVeterinaria.seleccionarVeterinaria(TbTotalVeterinarias, txtId, txtNombre, txtDireccion, txtTelefono, txtCorreo);
     }//GEN-LAST:event_TbTotalVeterinariasMouseClicked
 
-    private void BtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarActionPerformed
+          /*
         Veterinaria objetoVeterinaria = new Veterinaria();
         objetoVeterinaria.insertarVeterinaria(txtNombre, txtDireccion, txtTelefono, txtCorreo, txtPedidosMes);
         objetoVeterinaria.mostrarVeterinarias(TbTotalVeterinarias);
+        */  
+    
+    private void BtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarActionPerformed
+
+        
+        String nombre = txtNombre.getText();
+        String direccion = txtDireccion.getText();
+        String telefono = txtTelefono.getText();
+        String correo = txtCorreo.getText();
+        
+
+        try {
+            if (conectar == null || conectar.isClosed()) {
+                estableceConexion();
+            }
+
+            String query = "{call InsertarVeterinaria(?, ?, ?, ?)}";
+            CallableStatement stmt = conectar.prepareCall(query);
+            stmt.setString(1, nombre);
+            stmt.setString(2, direccion);
+            stmt.setString(3, telefono);
+            stmt.setString(4, correo);
+  
+
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Veterinaria añadida exitosamente");
+
+            // Actualizar la tabla después de añadir el producto
+            Veterinaria objetoVeterinaria = new Veterinaria();
+            objetoVeterinaria.mostrarVeterinarias(TbTotalVeterinarias);
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al añadir la veterinaria: " + ex.getMessage());
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (conectar != null && !conectar.isClosed()) {
+                    conectar.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }        
+        
     }//GEN-LAST:event_BtnGuardarActionPerformed
 
-    private void BtnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnModificarActionPerformed
+        /*
         Veterinaria objetoVeterinaria = new Veterinaria();
-        objetoVeterinaria.modificarVeterinaria(txtId,txtNombre, txtDireccion, txtTelefono, txtCorreo, txtPedidosMes);
+        objetoVeterinaria.modificarVeterinaria(txtId,txtNombre, txtDireccion, txtTelefono, txtCorreo);
         objetoVeterinaria.mostrarVeterinarias(TbTotalVeterinarias);
+        */    
+    
+    private void BtnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnModificarActionPerformed
+                                        
+    String id = txtId.getText();
+    String nombre = txtNombre.getText();
+    String direccion = txtDireccion.getText();
+    String telefono = txtTelefono.getText();
+    String correo = txtCorreo.getText();
+
+    try {
+        if (conectar == null || conectar.isClosed()) {
+            estableceConexion();
+        }
+
+        String query = "{call ActualizarVeterinaria(?, ?, ?, ?, ?)}";
+        CallableStatement stmt = conectar.prepareCall(query);
+        stmt.setString(1, id);
+        stmt.setString(2, nombre);
+        stmt.setString(3, direccion);
+        stmt.setString(4, telefono);
+        stmt.setString(5, correo);
+
+        stmt.executeUpdate();
+        JOptionPane.showMessageDialog(this, "Veterinaria modificada exitosamente");
+
+        // Actualizar la tabla después de modificar la veterinaria
+        Veterinaria objetoVeterinaria = new Veterinaria();
+        objetoVeterinaria.mostrarVeterinarias(TbTotalVeterinarias);
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al modificar la veterinaria: " + ex.getMessage());
+        ex.printStackTrace();
+    } finally {
+        try {
+            if (conectar != null && !conectar.isClosed()) {
+                conectar.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }        
+
+     
     }//GEN-LAST:event_BtnModificarActionPerformed
 
-    private void BtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEliminarActionPerformed
+    /*
         Veterinaria objetoVeterinaria = new Veterinaria();
         objetoVeterinaria.eliminarVeterinaria(txtId);
         objetoVeterinaria.mostrarVeterinarias(TbTotalVeterinarias);
-    }//GEN-LAST:event_BtnEliminarActionPerformed
+        */
 
+    private void BtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEliminarActionPerformed
+      
+    String id = txtId.getText();
+
+    try {
+        if (conectar == null || conectar.isClosed()) {
+            estableceConexion();
+        }
+
+        String query = "{call eliminar_veterinaria(?)}";
+        CallableStatement stmt = conectar.prepareCall(query);
+        stmt.setString(1, id);
+
+        stmt.executeUpdate();
+        JOptionPane.showMessageDialog(this, "Veterinaria eliminada exitosamente");
+
+        // Actualizar la tabla después de eliminar la veterinaria
+        Veterinaria objetoVeterinaria = new Veterinaria();
+        objetoVeterinaria.mostrarVeterinarias(TbTotalVeterinarias);
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al eliminar la veterinaria: " + ex.getMessage());
+        ex.printStackTrace();
+    } finally {
+        try {
+            if (conectar != null && !conectar.isClosed()) {
+                conectar.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }        
+    }//GEN-LAST:event_BtnEliminarActionPerformed
+    private void TbTotalVeterinariasMouseClicked() {
+        Veterinaria objetoVeterinaria = new Veterinaria();
+        objetoVeterinaria.seleccionarVeterinaria(TbTotalVeterinarias, txtId, txtNombre, txtDireccion, txtTelefono, txtCorreo);
+    }
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FormVeterinaria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FormVeterinaria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FormVeterinaria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FormVeterinaria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
+       public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FormVeterinaria().setVisible(true);

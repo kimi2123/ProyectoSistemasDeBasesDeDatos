@@ -71,7 +71,7 @@ public class Veterinaria {
         this.correoVeterinaria = correoVeterinaria;
     }
 
-    public void insertarVeterinaria(JTextField paramNombre,JTextField paramDireccion,JTextField paramTelefono, JTextField paramCorreo, JTextField paramPedidosMes){
+    public void insertarVeterinaria(JTextField paramNombre,JTextField paramDireccion,JTextField paramTelefono, JTextField paramCorreo ){
         
         setNombreVeterinaria(paramNombre.getText());
         setDireccionVeterinaria(paramDireccion.getText());
@@ -101,57 +101,49 @@ public class Veterinaria {
         }
     }
     
-    public void mostrarVeterinarias(JTable paramTablaTotalVeterinarias){
-        
-        CConexion objetoConexion = new CConexion();
-        
-        DefaultTableModel modelo = new DefaultTableModel();
-        
-        TableRowSorter<TableModel> ordernarTabla = new TableRowSorter<TableModel> (modelo);
-        paramTablaTotalVeterinarias.setRowSorter(ordernarTabla);
-        
-        String sql = "";
-        
-        modelo.addColumn("idVeterinaria");
-        modelo.addColumn("nombre");
-        modelo.addColumn("direccion");
-        modelo.addColumn("telefono");
-        modelo.addColumn("correo_electronico");
-
-        
-        paramTablaTotalVeterinarias.setModel(modelo);
-        
-        sql = "select * from veterinaria;";
-        
-        String[] datos =  new String[6];
-        
-        Statement st;
-        
-        try{
-            st = objetoConexion.estableceConexion().createStatement();
-            
-            ResultSet rs = st.executeQuery(sql);
-            
-            while(rs.next()){
-                datos[0] = rs.getString(1);
-                datos[1] = rs.getString(2);
-                datos[2] = rs.getString(3);
-                datos[3] = rs.getString(4);
-                datos[4] = rs.getString(5);
-
-                
-                modelo.addRow(datos);
-            }
-            
-            paramTablaTotalVeterinarias.setModel(modelo);
-            
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "No se pudo mostrar los registros, error: " + e.toString());
-        }
-        
+   public void mostrarVeterinarias(JTable paramTablaTotalVeterinarias){
+    if (paramTablaTotalVeterinarias == null) {
+        JOptionPane.showMessageDialog(null, "La tabla de veterinarias no está inicializada.");
+        return;
     }
-    
-    public void seleccionarVeterinaria(JTable paramTablaVeterinarias, JTextField paramId, JTextField paramNombre, JTextField paramDireccion,JTextField paramTelefono, JTextField paramCorreo, JTextField paramPedidosMes){
+
+    CConexion objetoConexion = new CConexion();
+    DefaultTableModel modelo = new DefaultTableModel();
+    TableRowSorter<TableModel> ordernarTabla = new TableRowSorter<TableModel>(modelo);
+    paramTablaTotalVeterinarias.setRowSorter(ordernarTabla);
+
+    modelo.addColumn("idVeterinaria");
+    modelo.addColumn("nombre");
+    modelo.addColumn("direccion");
+    modelo.addColumn("telefono");
+    modelo.addColumn("correo_electronico");
+
+    paramTablaTotalVeterinarias.setModel(modelo);
+
+    String sql = "select * from veterinaria;";
+    String[] datos = new String[5];
+    Statement st;
+
+    try {
+        st = objetoConexion.estableceConexion().createStatement();
+        ResultSet rs = st.executeQuery(sql);
+
+        while (rs.next()) {
+            datos[0] = rs.getString(1);
+            datos[1] = rs.getString(2);
+            datos[2] = rs.getString(3);
+            datos[3] = rs.getString(4);
+            datos[4] = rs.getString(5);
+            modelo.addRow(datos);
+        }
+
+        paramTablaTotalVeterinarias.setModel(modelo);
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "No se pudo mostrar los registros, error: " + e.toString());
+    }
+}    
+    public void seleccionarVeterinaria(JTable paramTablaVeterinarias, JTextField paramId, JTextField paramNombre, JTextField paramDireccion,JTextField paramTelefono, JTextField paramCorreo ){
         
         try{
             int fila = paramTablaVeterinarias.getSelectedRow();
@@ -171,7 +163,7 @@ public class Veterinaria {
             JOptionPane.showMessageDialog(null, "Error de Seleccion, error: " + e.toString());
         }
     }
-    public void modificarVeterinaria(JTextField paramId, JTextField paramNombre, JTextField paramDireccion,JTextField paramTelefono, JTextField paramCorreo, JTextField paramPedidosMes){
+    public void modificarVeterinaria(JTextField paramId, JTextField paramNombre, JTextField paramDireccion,JTextField paramTelefono, JTextField paramCorreo){
         
         setId(Integer.parseInt(paramId.getText()));
         setNombreVeterinaria(paramNombre.getText());
