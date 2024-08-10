@@ -14,10 +14,10 @@ import javax.swing.JOptionPane;
 public class CConexion {
     Connection conectar = null;
     
-    String usuario = "root";
-    String contrasena = "0q2{3j%tak%y_AK";
-    String bd = "gestion_venta";
-    String ip = "localhost";
+    String usuario = "uskurvwk16lovtxn";
+    String contrasena = "RWd00RyfDDaicXQeHMG8";
+    String bd = "brqnemyppywmytouf6fv";
+    String ip = "brqnemyppywmytouf6fv-mysql.services.clever-cloud.com";
     String puerto = "3306";
     
     String cadena = "jdbc:mysql://"+ip+":"+puerto+"/"+bd;
