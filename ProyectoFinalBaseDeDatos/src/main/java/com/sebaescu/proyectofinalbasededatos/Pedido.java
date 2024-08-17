@@ -143,7 +143,7 @@ public void insertarPedido(JTextField paramFechaEntrega,JTextField paramFechaCre
 
         paramTablaTotalPedidos.setModel(modelo);
 
-        String sql = "select * from pedido;";
+        String sql = "select * from tablaPedido;";
         String[] datos = new String[7];
         Statement st;
 

@@ -123,7 +123,7 @@ public class Producto {
         
         paramTablaTotalProductos.setModel(modelo);
         
-        sql = "select * from Productos;";
+        sql = "select * from tablaProductos;";
         
         String[] datos =  new String[6];
         

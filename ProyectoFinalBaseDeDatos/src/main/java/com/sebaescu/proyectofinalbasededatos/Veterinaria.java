@@ -71,35 +71,59 @@ public class Veterinaria {
         this.correoVeterinaria = correoVeterinaria;
     }
 
-    public void insertarVeterinaria(JTextField paramNombre,JTextField paramDireccion,JTextField paramTelefono, JTextField paramCorreo ){
-        
-        setNombreVeterinaria(paramNombre.getText());
-        setDireccionVeterinaria(paramDireccion.getText());
-        setTelefonoVeterinaria(paramTelefono.getText());
-        setCorreoVeterinaria(paramCorreo.getText());
+    public void insertarVeterinaria(JTextField paramNombre, JTextField paramDireccion, JTextField paramTelefono, JTextField paramCorreo) {
+    // Bandera para controlar la validación
+    int bandera = 1;
+    
+    // Establecer valores de los campos
+    setNombreVeterinaria(paramNombre.getText());
+    setDireccionVeterinaria(paramDireccion.getText());
 
-        
+    // Verificar que el teléfono tenga 9 caracteres
+    if (paramTelefono.getText().length() != 9) {
+        JOptionPane.showMessageDialog(null, "El número de teléfono debe tener 9 dígitos.");
+        bandera = 0; // Cambiar bandera para evitar la inserción
+    }
+    
+    // Verificar que el correo tenga una arroba y un punto
+    String correo = paramCorreo.getText();
+    if (!correo.contains("@") || !correo.contains(".")) {
+        JOptionPane.showMessageDialog(null, "El correo electrónico debe tener un formato válido con '@' y '.'.");
+        bandera = 0; // Cambiar bandera para evitar la inserción
+    }
+
+    setTelefonoVeterinaria(paramTelefono.getText());
+    setCorreoVeterinaria(correo);
+
+    // Si la bandera es 1, significa que todas las validaciones han sido exitosas
+    if (bandera == 1) {
+        // Crear conexión
         CConexion objetoConexion = new CConexion();
         
         String consulta = "{call InsertarVeterinaria(?, ?, ?, ?)}";
         
-        try{
-            
+        try {
+            // Preparar llamada al procedimiento almacenado
             CallableStatement cs = objetoConexion.estableceConexion().prepareCall(consulta);
             
+            // Establecer parámetros para el procedimiento almacenado
             cs.setString(1, getNombreVeterinaria());
             cs.setString(2, getDireccionVeterinaria());
             cs.setString(3, getTelefonoVeterinaria());
             cs.setString(4, getCorreoVeterinaria()); 
             
+            // Ejecutar la llamada al procedimiento almacenado
             cs.execute();
             
-            JOptionPane.showMessageDialog(null, "Se añadio correctamente la veterinaria");
+            // Mostrar mensaje de éxito
+            JOptionPane.showMessageDialog(null, "Se añadió correctamente la veterinaria.");
             
-        }catch(Exception e){
+        } catch (Exception e) {
+            // Mostrar mensaje de error si algo sale mal
             JOptionPane.showMessageDialog(null, "No se añadió correctamente la veterinaria, error: " + e.toString());
         }
     }
+}
     
    public void mostrarVeterinarias(JTable paramTablaTotalVeterinarias){
     if (paramTablaTotalVeterinarias == null) {
@@ -120,7 +144,7 @@ public class Veterinaria {
 
     paramTablaTotalVeterinarias.setModel(modelo);
 
-    String sql = "select * from veterinaria;";
+    String sql = "select * from tablaVeterinaria;";
     String[] datos = new String[5];
     Statement st;
 

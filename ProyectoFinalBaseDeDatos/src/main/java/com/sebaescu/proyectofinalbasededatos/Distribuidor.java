@@ -92,38 +92,49 @@ public class Distribuidor {
 
 
 
-    public void insertarDistribuidor(JTextField paramNombre,JTextField paramApellido,JTextField paramDireccion, JTextField paramfecha, JTextField paramTelefono,JTextField paramCedula){
-        
-        setNombre(paramNombre.getText());
-        setApellido(paramApellido.getText());
-        setDireccion(paramDireccion.getText());
-        setTelefono(paramTelefono.getText());
-        setFechaNacimiento(Date.valueOf(paramfecha.getText()));
-        setCedula(paramCedula.getText());
-        
-        CConexion objetoConexion = new CConexion();
-        
-        String consulta = "{call InsertarDistribuidor(?, ?, ?, ?, ?, ?)}";
-        
-        try{
-            
-            CallableStatement cs = objetoConexion.estableceConexion().prepareCall(consulta);
-            
-            cs.setString(1, getNombre());
-            cs.setString(2, getApellido());
-            cs.setString(3, getDireccion());
-            cs.setDate(4, getFechaNacimiento());
-            cs.setString(5, getTelefono());
-            cs.setString(6, getCedula());
-            
-            cs.execute();
-            
-            JOptionPane.showMessageDialog(null, "Se añadio correctamente el Distribuidor");
-            
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "No se añadió correctamente el Distribuidor, error: " + e.toString());
-        }
+   public void insertarDistribuidor(JTextField paramNombre, JTextField paramApellido, JTextField paramDireccion, JTextField paramFecha, JTextField paramTelefono, JTextField paramCedula) {
+    
+    setNombre(paramNombre.getText());
+    setApellido(paramApellido.getText());
+    setDireccion(paramDireccion.getText());
+    setTelefono(paramTelefono.getText());
+    setFechaNacimiento(Date.valueOf(paramFecha.getText()));
+    setCedula(paramCedula.getText());
+
+    // Validación de que la cédula tiene 10 dígitos
+    if (paramCedula.getText().length() != 10) {
+        JOptionPane.showMessageDialog(null, "La cédula debe tener 10 dígitos.");
+        return;
     }
+
+    // Validación de que el teléfono tiene 10 dígitos
+    if (paramTelefono.getText().length() != 9) {
+        JOptionPane.showMessageDialog(null, "El teléfono debe tener 9 dígitos.");
+        return;
+    }
+    
+    CConexion objetoConexion = new CConexion();
+    
+    String consulta = "{call InsertarDistribuidor(?, ?, ?, ?, ?, ?)}";
+    
+    try {
+        CallableStatement cs = objetoConexion.estableceConexion().prepareCall(consulta);
+        
+        cs.setString(1, getNombre());
+        cs.setString(2, getApellido());
+        cs.setString(3, getDireccion());
+        cs.setDate(4, getFechaNacimiento());
+        cs.setString(5, getTelefono());
+        cs.setString(6, getCedula());
+        
+        cs.execute();
+        
+        JOptionPane.showMessageDialog(null, "Se añadió correctamente el Distribuidor");
+        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "No se añadió correctamente el Distribuidor, error: " + e.toString());
+    }
+}
     
     public void mostrarDistribuidor(JTable paramTablaTotalDistribuidor){
         
@@ -146,7 +157,7 @@ public class Distribuidor {
         
         paramTablaTotalDistribuidor.setModel(modelo);
         
-        sql = "select * from distribuidor;";
+        sql = "select * from tablaDistribuidor;";
         
         String[] datos =  new String[7];
         

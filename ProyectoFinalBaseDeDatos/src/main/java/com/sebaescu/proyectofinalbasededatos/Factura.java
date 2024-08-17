@@ -139,7 +139,7 @@ public class Factura {
         
         paramTablaTotalFacturas.setModel(modelo);
         
-        sql = "select * from factura;";
+        sql = "select * from tablaFactura;";
         
         String[] datos =  new String[6];
         
